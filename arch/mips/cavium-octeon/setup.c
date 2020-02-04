@@ -1126,16 +1126,22 @@ void prom_free_prom_memory(void)
 }
 
 int octeon_prune_device_tree(void);
+int ubnt_dt_set_mac(void);
 
 extern const char __dtb_octeon_3xxx_begin;
 extern const char __dtb_octeon_3xxx_end;
 extern const char __dtb_octeon_68xx_begin;
 extern const char __dtb_octeon_68xx_end;
+extern const char __dtb_ubnt_e100_begin;
+extern const char __dtb_ubnt_e100_end;
+extern const char __dtb_ubnt_e101_begin;
+extern const char __dtb_ubnt_e101_end;
 void __init device_tree_init(void)
 {
 	int dt_size;
 	struct boot_param_header *fdt;
 	bool do_prune;
+	bool do_set_mac = false;
 
 	if (octeon_bootinfo->minor_version >= 3 && octeon_bootinfo->fdt_addr) {
 		fdt = phys_to_virt(octeon_bootinfo->fdt_addr);
@@ -1148,6 +1154,23 @@ void __init device_tree_init(void)
 		fdt = (struct boot_param_header *)&__dtb_octeon_68xx_begin;
 		dt_size = &__dtb_octeon_68xx_end - &__dtb_octeon_68xx_begin;
 		do_prune = true;
+	} else if (octeon_bootinfo->board_type == CVMX_BOARD_TYPE_UBNT_E100) {
+		switch (octeon_bootinfo->board_rev_major) {
+		case 1:
+			fdt = (struct boot_param_header *)
+			      &__dtb_ubnt_e101_begin;
+			dt_size = &__dtb_ubnt_e101_end
+			          - &__dtb_ubnt_e101_begin;
+			break;
+		default:
+			fdt = (struct boot_param_header *)
+			      &__dtb_ubnt_e100_begin;
+			dt_size = &__dtb_ubnt_e100_end
+			          - &__dtb_ubnt_e100_begin;
+			break;
+		}
+		do_prune = false;
+		do_set_mac = true;
 	} else {
 		fdt = (struct boot_param_header *)&__dtb_octeon_3xxx_begin;
 		dt_size = &__dtb_octeon_3xxx_end - &__dtb_octeon_3xxx_begin;
@@ -1164,6 +1187,10 @@ void __init device_tree_init(void)
 		octeon_prune_device_tree();
 		pr_info("Using internal Device Tree.\n");
 	}
+
+	if (do_set_mac)
+		ubnt_dt_set_mac();
+
 	unflatten_device_tree();
 }
 

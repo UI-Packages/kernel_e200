@@ -30,6 +30,7 @@ obj-$(CONFIG_CAVIUM_OCTEON_KERNEL_CRYPTO) += octeon-crypto.o
 obj-$(CONFIG_OCTEON_ERROR_INJECTOR)	+= octeon-error-injector.o
 
 DTS_FILES = octeon_3xxx.dts octeon_68xx.dts
+DTS_FILES += ubnt_e100.dts ubnt_e101.dts
 DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
 
 obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))

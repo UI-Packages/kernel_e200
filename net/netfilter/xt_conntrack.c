@@ -169,6 +169,8 @@ conntrack_mt(const struct sk_buff *skb, struct xt_action_param *par,
 	const struct nf_conn *ct;
 	unsigned int statebit;
 
+	par->cvm_reserved |= SKB_CVM_RESERVED_1;
+
 	ct = nf_ct_get(skb, &ctinfo);
 
 	if (ct) {

@@ -62,6 +62,12 @@ static void cvm_oct_rgmii_poll(struct net_device *dev)
 	} else {
 		link_info = cvmx_helper_link_get(priv->ipd_port);
 	}
+
+	if (unlikely(link_info.s.link_up && priv->phydev
+			&& priv->phydev->state == PHY_HALTED)) {
+		phy_start(priv->phydev);
+	}
+
 	if (link_info.u64 == priv->link_info) {
 		/* If the 10Mbps preamble workaround is supported and we're
 		 * at 10Mbps we may need to do some special checking.
@@ -282,7 +288,11 @@ int cvm_oct_rgmii_stop(struct net_device *dev)
 	cvmx_write_csr(CVMX_IPD_SUB_PORT_FCS, ipd_sub_port_fcs.u64);
 	priv->rx_strip_fcs = 0;
 
-	return 0;
+	if (priv->phydev)
+		phy_disconnect(priv->phydev);
+	priv->phydev = NULL;
+
+	return cvm_oct_common_stop(dev);
 }
 
 int cvm_oct_rgmii_init(struct net_device *dev)

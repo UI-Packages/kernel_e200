@@ -40,7 +40,7 @@
 #ifdef CONFIG_EXT3_DEFAULTS_TO_ORDERED
   #define EXT3_MOUNT_DEFAULT_DATA_MODE EXT3_MOUNT_ORDERED_DATA
 #else
-  #define EXT3_MOUNT_DEFAULT_DATA_MODE EXT3_MOUNT_WRITEBACK_DATA
+  #define EXT3_MOUNT_DEFAULT_DATA_MODE EXT3_MOUNT_JOURNAL_DATA
 #endif
 
 static int ext3_load_journal(struct super_block *, struct ext3_super_block *,

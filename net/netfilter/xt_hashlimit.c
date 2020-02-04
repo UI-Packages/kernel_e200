@@ -519,6 +519,8 @@ hashlimit_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	struct dsthash_ent *dh;
 	struct dsthash_dst dst;
 
+	par->cvm_reserved |= SKB_CVM_RESERVED_1;
+
 	if (hashlimit_init_dst(hinfo, &dst, skb, par->thoff) < 0)
 		goto hotdrop;
 

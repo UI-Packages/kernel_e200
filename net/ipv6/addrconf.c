@@ -165,12 +165,12 @@ static bool ipv6_chk_same_addr(struct net *net, const struct in6_addr *addr,
 static ATOMIC_NOTIFIER_HEAD(inet6addr_chain);
 
 static struct ipv6_devconf ipv6_devconf __read_mostly = {
-	.forwarding		= 0,
+	.forwarding		= 1,
 	.hop_limit		= IPV6_DEFAULT_HOPLIMIT,
 	.mtu6			= IPV6_MIN_MTU,
 	.accept_ra		= 1,
 	.accept_redirects	= 1,
-	.autoconf		= 1,
+	.autoconf		= 0,
 	.force_mld_version	= 0,
 	.dad_transmits		= 1,
 	.rtr_solicits		= MAX_RTR_SOLICITATIONS,
@@ -201,12 +201,12 @@ static struct ipv6_devconf ipv6_devconf __read_mostly = {
 };
 
 static struct ipv6_devconf ipv6_devconf_dflt __read_mostly = {
-	.forwarding		= 0,
+	.forwarding		= 1,
 	.hop_limit		= IPV6_DEFAULT_HOPLIMIT,
 	.mtu6			= IPV6_MIN_MTU,
 	.accept_ra		= 1,
 	.accept_redirects	= 1,
-	.autoconf		= 1,
+	.autoconf		= 0,
 	.dad_transmits		= 1,
 	.rtr_solicits		= MAX_RTR_SOLICITATIONS,
 	.rtr_solicit_interval	= RTR_SOLICITATION_INTERVAL,
